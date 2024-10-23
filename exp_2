@@ -1,0 +1,83 @@
+CREATE DATABASE HMS;
+USE HMS;
+CREATE TABLE Doctor (
+    Doc_id INT PRIMARY KEY,
+    Doc_name VARCHAR(100),
+    Experience INT,
+    Specialization VARCHAR(100),
+    Contact VARCHAR(100)
+);
+
+CREATE TABLE Drugs (
+    Drug_id INT PRIMARY KEY,
+    Drug_name VARCHAR(100),
+    Manufact_name VARCHAR(100),
+    Phar_id INT
+);
+
+CREATE TABLE Nurse (
+    Nurse_id INT PRIMARY KEY,
+    Nurse_name VARCHAR(100),
+    Qualification_history TEXT
+);
+
+CREATE TABLE Disease (
+    Disease_name VARCHAR(100) PRIMARY KEY,
+    Disease_stage VARCHAR(100),
+    Disease_treatment TEXT,
+    Disease_detection_date DATE
+);
+
+CREATE TABLE Patient_Facts (
+    P_id INT PRIMARY KEY,
+    Date_admit DATE,
+    Date_discharge DATE,
+    Doc_id INT,
+    Drug_id INT,
+    Nurse_id INT,
+    Disease_name VARCHAR(100),
+    FOREIGN KEY (Doc_id) REFERENCES Doctor(Doc_id),
+    FOREIGN KEY (Drug_id) REFERENCES Drugs(Drug_id),
+    FOREIGN KEY (Nurse_id) REFERENCES Nurse(Nurse_id),
+    FOREIGN KEY (Disease_name) REFERENCES Disease(Disease_name)
+);
+
+INSERT INTO Doctor (Doc_id, Doc_name, Experience, Specialization, Contact) 
+VALUES 
+(1, 'Dr. John Doe', 10, 'Cardiology', '123-456-7890'),
+(2, 'Dr. Jane Smith', 8, 'Neurology', '234-567-8901');
+
+INSERT INTO Drugs (Drug_id, Drug_name, Manufact_name, Phar_id) 
+VALUES 
+(1, 'Aspirin', 'PharmaCorp', 101),
+(2, 'Ibuprofen', 'MediLife', 102);
+
+INSERT INTO Nurse (Nurse_id, Nurse_name, Qualification_history) 
+VALUES 
+(1, 'Nurse A', 'B.Sc Nursing, 5 years experience'),
+(2, 'Nurse B', 'M.Sc Nursing, 3 years experience');
+
+INSERT INTO Disease (Disease_name, Disease_stage, Disease_treatment, Disease_detection_date) 
+VALUES 
+('Hypertension', 'Stage 1', 'Lifestyle changes, medication', '2024-08-15'),
+('Migraine', 'Chronic', 'Medication, stress management', '2024-08-20');
+
+INSERT INTO Patient_Facts (P_id, Date_admit, Date_discharge, Doc_id, Drug_id, Nurse_id, Disease_name) 
+VALUES 
+(1, '2024-08-21', '2024-08-25', 1, 1, 1, 'Hypertension'),
+(2, '2024-08-22', '2024-08-26', 2, 2, 2, 'Migraine');
+
+SELECT 
+    PF.P_id AS Patient_ID,
+    PF.Date_admit AS Admission_Date,
+    PF.Date_discharge AS Discharge_Date,
+    D.Doc_name AS Doctor_Name,
+    D.Specialization
+FROM 
+    Patient_Facts PF
+JOIN 
+    Doctor D ON PF.Doc_id = D.Doc_id
+WHERE 
+    PF.P_id = 1;
+    
+SELECT * FROM  Disease, Patient_Facts;
